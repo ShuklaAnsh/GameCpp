@@ -19,6 +19,8 @@ class Cell
         Cell(int params[4]);
         ~Cell();
         bool addNeighbour(Cell &neighbour);
+        Cell[8] getNeighbours();
+        int getDangerLevel();
 
     // Modules
     private:
