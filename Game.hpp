@@ -3,7 +3,8 @@
 
 #include <SDL2/SDL.h>
 #include <stdio.h>
-#include "Character.hpp"
+// #include "Character.hpp"
+#include "Minesweeper/Minesweeper.hpp"
 
 class Game 
 {
@@ -36,6 +37,7 @@ class Game
         SDL_Window*     m_window;          /* Pointer to the window being rendering to      */
         SDL_Surface*    m_screen_surface;  /* Pointer to the surface the window will be on  */
         SDL_Renderer*   m_renderer;        /* Pointer to the renderer                       */
-        Character*      m_character;       /* Pointer to the Character object               */
+        // Character*      m_character;       /* Pointer to the Character object               */
+        Minesweeper*    m_minesweeper;     /* Pointer to the Minesweeper object             */
 };
 #endif /* Game_hpp */

@@ -8,7 +8,8 @@ Game::Game(): m_running(false)
     , m_window(NULL)
     , m_screen_surface(NULL)
     , m_renderer(NULL)
-    , m_character(NULL)
+    // ,m_character(NULL)
+    , m_minesweeper(NULL)
 {
 }
 
@@ -19,7 +20,8 @@ Game::Game(): m_running(false)
  */
 Game::~Game()
 {
-    delete m_character;
+    // delete m_character;
+    delete m_minesweeper;
     SDL_DestroyWindow( m_window );
     SDL_DestroyRenderer( m_renderer );
     SDL_Quit();
@@ -71,7 +73,8 @@ bool Game::init(const char* title, int x, int y, int height, int width, bool ful
     
     printf( "Renderer created.\n" );
     
-    m_character = new Character(m_window, m_renderer);
+    m_minesweeper = new Minesweeper(m_renderer);
+    m_minesweeper->init(SCREEN_WIDTH - 12, SCREEN_HEIGHT - 24);
 
     m_running = true;
     return m_running;
@@ -107,13 +110,13 @@ void Game::eventHandler()
         case SDL_KEYDOWN:
             if(e.key.repeat == 0)
             {
-                m_character->resetVelocity();
-                m_character->move(e.key.keysym.sym);
+                //m_character->resetVelocity();
+                //m_character->move(e.key.keysym.sym);
             }
             else
             {
-                m_character->accelerate(e.key.keysym.sym);
-                m_character->move(e.key.keysym.sym);
+                //m_character->accelerate(e.key.keysym.sym);
+                //m_character->move(e.key.keysym.sym);
             }
             break;
 
@@ -136,7 +139,7 @@ void Game::render()
     SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
     SDL_RenderClear(m_renderer);
     /* Render stuff in this block */
-    m_character->render();
+    //m_character->render();
     /******************************/
     SDL_RenderPresent(m_renderer);
 }
