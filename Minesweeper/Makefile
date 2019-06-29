@@ -13,7 +13,7 @@ OBJ_NAME = Minesweeper.o
 
 #This is the target that compiles our executable
 all : $(OBJS)
-	$(CC) $(OBJS) -c -o $(OBJ_NAME) $(LFLAGS)
+	$(CC) $(OBJS) -c $(OBJ_NAME) $(LFLAGS)
 
 test : $(OBJS)
 	$(CC) $(OBJS) -o test $(LFLAGS)
