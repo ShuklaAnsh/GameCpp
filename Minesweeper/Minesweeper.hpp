@@ -2,14 +2,25 @@
 #define Minesweeper_hpp
 
 #include <SDL2/SDL.h>
-
+#include <SDL2/SDL_image.h>
+#include <vector>
 
 class Minesweeper 
 {
     // Types
     public:
-        static const int ROWS = 50;    /* const int for num rows              */
-        static const int COLS = 25;    /* const int for num columns           */
+        static const int ROWS = 20;    /* const int for num rows    */
+        static const int COLS = 20;    /* const int for num columns */
+        static const int MIDNIGHT = 9; /* const int for Threat Level Midnight */
+        struct Cell
+        {
+            SDL_Texture* texture;           /* Texture for displaying the cell */
+            SDL_Rect rect;                  /* Rect for rendering the texture */
+            int x;                          /* int for x position   */
+            int y;                          /* int for y position   */
+            int proximity;                  /* int for proximity    */
+            std::vector<Cell *> neighbours; /* Cell array for adjaent neighbours */
+        };  /* Struct for a Cell */
     
     protected:
     private:
@@ -21,19 +32,23 @@ class Minesweeper
         bool init(int board_width, int board_height);
         void render();
         void handleKey(SDL_Keycode& key_code);
-        void handleMouse(SDL_MouseButtonEvent& click);
-        void handleMouse(SDL_MouseMotionEvent& move);
+        void handleMouse(Sint32 x, Sint32 y);
+
+        bool addNeighbour(Cell &neighbour);
+        std::vector<Cell *> getNeighbours(Cell &neighbour);
+        int getThreatLevel();
 
     protected:
 
     private:
-
+        bool initCells();
+        void populateCell(Cell& cell, int x, int y, SDL_Surface * surface);
     // Modules
     private:
-        SDL_Renderer* m_renderer;   /* Pointer to the renderer for the Game     */
-        SDL_Rect** m_board;        /* SDL_Rect 2D array representing the Minesweeper board */
-        int m_cell_width;
-        int m_cell_height;
+        SDL_Renderer* m_renderer;    /* Pointer to the renderer for the Game */
+        std::vector<std::vector<Cell>> m_cells; /* 2D vector array of cells */
+        int m_cell_width;            /* int for Cell width    */
+        int m_cell_height;           /* int for Cell height   */
 };
 
 #endif /* Minesweeper_hpp */

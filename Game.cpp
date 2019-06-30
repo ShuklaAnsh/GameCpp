@@ -74,7 +74,7 @@ bool Game::init(const char* title, int x, int y, int height, int width, bool ful
     printf( "Renderer created.\n" );
     
     m_minesweeper = new Minesweeper(m_renderer);
-    m_minesweeper->init(SCREEN_WIDTH - 12, SCREEN_HEIGHT - 24);
+    m_minesweeper->init(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     m_running = true;
     return m_running;
@@ -121,7 +121,8 @@ void Game::eventHandler()
             break;
 
         case SDL_MOUSEBUTTONDOWN:
-            printf("Mouse x: %d, Mouse y: %d\n", e.button.x, e.button.y);    
+            // printf("Mouse x: %d, Mouse y: %d\n", e.button.x, e.button.y);
+            m_minesweeper->handleMouse(e.button.x, e.button.y);
             break;
 
         default:
@@ -138,8 +139,10 @@ void Game::render()
 {
     SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
     SDL_RenderClear(m_renderer);
+    /******************************/
     /* Render stuff in this block */
     //m_character->render();
+    m_minesweeper->render();
     /******************************/
     SDL_RenderPresent(m_renderer);
 }
@@ -160,12 +163,12 @@ int main(int argc, char const *argv[])
 {
     Game* game = new Game();
 
-    game->init("My Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, game->SCREEN_WIDTH, game->SCREEN_HEIGHT, false);
+    game->init("Minesweeper", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, game->SCREEN_WIDTH, game->SCREEN_HEIGHT, false);
 
     while( game->isRunning() )
     {
         game->update();
-        SDL_Delay(5);
+        SDL_Delay(1);
     }
     delete game;
     return 0;    
