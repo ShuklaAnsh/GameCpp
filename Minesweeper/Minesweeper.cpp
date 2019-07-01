@@ -80,6 +80,7 @@ void Minesweeper::populateCell(Cell& cell, int x, int y, SDL_Surface * surface)
     cell.rect.x = x * m_cell_width;
     cell.rect.w = m_cell_width;
     cell.rect.h = m_cell_height;
+    cell.snooped = false;
     cell.proximity = 0;
     cell.texture = SDL_CreateTextureFromSurface(m_renderer, surface);
 }
@@ -122,7 +123,7 @@ void Minesweeper::handleMouse(Sint32 x, Sint32 y)
 {
     int row = x/m_cell_width;
     int col = y/m_cell_height;
-    int cell_x = m_cells.at(col).at(row).x;
-    int cell_y = m_cells.at(col).at(row).y;
-    printf("Cell ( %d, %d )\n", cell_x, cell_y);
+    Cell &cell = m_cells.at(col).at(row);
+    printf("Cell ( %d, %d ): snooped: %d\n", cell.x, cell.y, cell.snooped);
+    cell.snooped = true;
 }

@@ -20,6 +20,7 @@ class Minesweeper
             int y;                          /* int for y position   */
             int proximity;                  /* int for proximity    */
             std::vector<Cell *> neighbours; /* Cell array for adjaent neighbours */
+            bool snooped;                   /* bool for if the Cell has been visited  */
         };  /* Struct for a Cell */
     
     protected:
