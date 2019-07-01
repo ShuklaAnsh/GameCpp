@@ -9,9 +9,10 @@ class Minesweeper
 {
     // Types
     public:
+        enum CELL_POS { LEFT, TOP_LEFT, TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT , NUM_POSITIONS};
         static const int ROWS = 20;    /* const int for num rows    */
         static const int COLS = 20;    /* const int for num columns */
-        static const int MIDNIGHT = 9; /* const int for Threat Level Midnight */
+        
         struct Cell
         {
             SDL_Texture* texture;           /* Texture for displaying the cell */
@@ -19,13 +20,12 @@ class Minesweeper
             int x;                          /* int for x position   */
             int y;                          /* int for y position   */
             int proximity;                  /* int for proximity    */
-            std::vector<Cell *> neighbours; /* Cell array for adjaent neighbours */
+            Cell * neighbours[CELL_POS::NUM_POSITIONS];   /* Cell vector array for adjaent neighbours */
             bool snooped;                   /* bool for if the Cell has been visited  */
         };  /* Struct for a Cell */
     
     protected:
     private:
-         enum class CELL_POS { LEFT, TOP_LEFT, TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT };
 
     // API 
     public:
@@ -48,6 +48,7 @@ class Minesweeper
     // Modules
     private:
         SDL_Renderer* m_renderer;    /* Pointer to the renderer for the Game */
+        Cell m_null_cell; 
         std::vector<std::vector<Cell>> m_cells; /* 2D vector array of cells */
         int m_cell_width;            /* int for Cell width    */
         int m_cell_height;           /* int for Cell height   */

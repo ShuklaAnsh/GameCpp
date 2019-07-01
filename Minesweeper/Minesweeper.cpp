@@ -45,6 +45,9 @@ Minesweeper::Minesweeper(SDL_Renderer* renderer) : m_renderer(renderer)
     SDL_FreeSurface(cell_base_surface);
     SDL_FreeSurface(cell_flag_surface);
     SDL_FreeSurface(cell_bong_surface);
+    m_null_cell.x = -1;
+    m_null_cell.y = -1;
+    m_null_cell.snooped = true;
 }
 
 /**
@@ -132,33 +135,33 @@ void Minesweeper::initCellNeighbours(Cell& cell)
     //left border
     if (cell.x == 0)
     {
-        cell.neighbours.at( CELL_POS::TOP_LEFT ) = NULL;
-        cell.neighbours.at( CELL_POS::LEFT ) = NULL;
-        cell.neighbours.at( CELL_POS::BOTTOM_LEFT ) = NULL;
-        cell.neighbours.at( CELL_POS::RIGHT ) = &m_cells.at(cell.x+1).at(cell.y);
+        cell.neighbours[CELL_POS::TOP_LEFT] = &m_null_cell;
+        cell.neighbours[CELL_POS::LEFT] = &m_null_cell;
+        cell.neighbours[CELL_POS::BOTTOM_LEFT] = &m_null_cell;
+        cell.neighbours[CELL_POS::RIGHT] = &m_cells.at(cell.x+1).at(cell.y);
         // top left
         if (cell.y == 0)
         {
-            cell.neighbours.at( CELL_POS::TOP ) = NULL;
-            cell.neighbours.at( CELL_POS::TOP_RIGHT ) = NULL;
-            cell.neighbours.at( CELL_POS::BOTTOM_RIGHT ) = &m_cells.at(cell.x+1).at(cell.y+1);
-            cell.neighbours.at( CELL_POS::BOTTOM ) = &m_cells.at(cell.x).at(cell.y+1);
+            // cell.neighbours.at( CELL_POS::TOP ) = &m_null_cell;
+            // cell.neighbours.at( CELL_POS::TOP_RIGHT ) = &m_null_cell;
+            // cell.neighbours.at( CELL_POS::BOTTOM_RIGHT ) = &m_cells.at(cell.x+1).at(cell.y+1);
+            // cell.neighbours.at( CELL_POS::BOTTOM ) = &m_cells.at(cell.x).at(cell.y+1);
         }
         //bottom left
         else if (cell.y == ROWS)
         {
-            cell.neighbours.at( CELL_POS::TOP ) = &m_cells.at(cell.x).at(cell.y-1); 
-            cell.neighbours.at( CELL_POS::TOP_RIGHT ) = &m_cells.at(cell.x+1).at(cell l.y-1);
-            cell.neighbours.at( CELL_POS::BOTTOM_RIGHT ) = NULL;
-            cell.neighbours.at( CELL_POS::BOTTOM ) = NULL;
+            // cell.neighbours.at( CELL_POS::TOP ) = &m_cells.at(cell.x).at(cell.y-1); 
+            // cell.neighbours.at( CELL_POS::TOP_RIGHT ) = &m_cells.at(cell.x+1).at(cell l.y-1);
+            // cell.neighbours.at( CELL_POS::BOTTOM_RIGHT ) = &m_null_cell;
+            // cell.neighbours.at( CELL_POS::BOTTOM ) = &m_null_cell;
         }
         //left
         else
         {
-            cell.neighbours.at( CELL_POS::TOP ) = &m_cells.at(cell.x).at(cell.y-1);
-            cell.neighbours.at( CELL_POS::TOP_RIGHT ) = &m_cells.at(cell.x+1).at(cell.y-1);
-            cell.neighbours.at( CELL_POS::BOTTOM_RIGHT ) = &m_cells.at(cell.x+1).at(cell.y+1);
-            cell.neighbours.at( CELL_POS::BOTTOM ) = &m_cells.at(cell.x).at(cell.y+1);
+            // cell.neighbours.at( CELL_POS::TOP ) = &m_cells.at(cell.x).at(cell.y-1);
+            // cell.neighbours.at( CELL_POS::TOP_RIGHT ) = &m_cells.at(cell.x+1).at(cell.y-1);
+            // cell.neighbours.at( CELL_POS::BOTTOM_RIGHT ) = &m_cells.at(cell.x+1).at(cell.y+1);
+            // cell.neighbours.at( CELL_POS::BOTTOM ) = &m_cells.at(cell.x).at(cell.y+1);
 
         }
 
