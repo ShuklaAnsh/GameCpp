@@ -9,6 +9,42 @@
  */
 Minesweeper::Minesweeper(SDL_Renderer* renderer) : m_renderer(renderer)
 {
+    SDL_Surface * cell_0_surface = IMG_Load("./Minesweeper/assets/cell0.png");
+    SDL_Surface * cell_1_surface = IMG_Load("./Minesweeper/assets/cell1.png");
+    SDL_Surface * cell_2_surface = IMG_Load("./Minesweeper/assets/cell2.png");
+    SDL_Surface * cell_3_surface = IMG_Load("./Minesweeper/assets/cell3.png");
+    SDL_Surface * cell_4_surface = IMG_Load("./Minesweeper/assets/cell4.png");
+    SDL_Surface * cell_5_surface = IMG_Load("./Minesweeper/assets/cell5.png");
+    SDL_Surface * cell_6_surface = IMG_Load("./Minesweeper/assets/cell6.png");
+    SDL_Surface * cell_7_surface = IMG_Load("./Minesweeper/assets/cell7.png");
+    SDL_Surface * cell_8_surface = IMG_Load("./Minesweeper/assets/cell8.png");
+    SDL_Surface * cell_base_surface = IMG_Load("./Minesweeper/assets/cell_base.png");
+    SDL_Surface * cell_flag_surface = IMG_Load("./Minesweeper/assets/flag.png");
+    SDL_Surface * cell_bong_surface = IMG_Load("./Minesweeper/assets/bomg.png");
+    m_cell_0_texture = SDL_CreateTextureFromSurface(m_renderer, cell_0_surface);
+    m_cell_1_texture = SDL_CreateTextureFromSurface(m_renderer, cell_1_surface);
+    m_cell_2_texture = SDL_CreateTextureFromSurface(m_renderer, cell_2_surface);
+    m_cell_3_texture = SDL_CreateTextureFromSurface(m_renderer, cell_3_surface);
+    m_cell_4_texture = SDL_CreateTextureFromSurface(m_renderer, cell_4_surface);
+    m_cell_5_texture = SDL_CreateTextureFromSurface(m_renderer, cell_5_surface);
+    m_cell_6_texture = SDL_CreateTextureFromSurface(m_renderer, cell_6_surface);
+    m_cell_7_texture = SDL_CreateTextureFromSurface(m_renderer, cell_7_surface);
+    m_cell_8_texture = SDL_CreateTextureFromSurface(m_renderer, cell_8_surface);
+    m_cell_base_texture = SDL_CreateTextureFromSurface(m_renderer, cell_base_surface);
+    m_cell_flag_texture = SDL_CreateTextureFromSurface(m_renderer, cell_flag_surface);
+    m_cell_bomg_texture = SDL_CreateTextureFromSurface(m_renderer, cell_bong_surface);
+    SDL_FreeSurface(cell_0_surface);
+    SDL_FreeSurface(cell_1_surface);
+    SDL_FreeSurface(cell_2_surface);
+    SDL_FreeSurface(cell_3_surface);
+    SDL_FreeSurface(cell_4_surface);
+    SDL_FreeSurface(cell_5_surface);
+    SDL_FreeSurface(cell_6_surface);
+    SDL_FreeSurface(cell_7_surface);
+    SDL_FreeSurface(cell_8_surface);
+    SDL_FreeSurface(cell_base_surface);
+    SDL_FreeSurface(cell_flag_surface);
+    SDL_FreeSurface(cell_bong_surface);
 }
 
 /**
@@ -17,6 +53,18 @@ Minesweeper::Minesweeper(SDL_Renderer* renderer) : m_renderer(renderer)
  */
 Minesweeper::~Minesweeper()
 {
+    SDL_DestroyTexture(m_cell_0_texture);
+    SDL_DestroyTexture(m_cell_1_texture);
+    SDL_DestroyTexture(m_cell_2_texture);
+    SDL_DestroyTexture(m_cell_3_texture);
+    SDL_DestroyTexture(m_cell_4_texture);
+    SDL_DestroyTexture(m_cell_5_texture);
+    SDL_DestroyTexture(m_cell_6_texture);
+    SDL_DestroyTexture(m_cell_7_texture);
+    SDL_DestroyTexture(m_cell_8_texture);
+    SDL_DestroyTexture(m_cell_base_texture);
+    SDL_DestroyTexture(m_cell_flag_texture);
+    SDL_DestroyTexture(m_cell_bomg_texture);
 }
 
 
@@ -50,29 +98,21 @@ bool Minesweeper::init(int board_width, int board_height)
 
 bool Minesweeper::initCells()
 {
-    SDL_Surface * tmpSurface = IMG_Load("./Minesweeper/assets/cell.png");
-    if( NULL == tmpSurface )
-    {   
-        printf("unable to make cell texture.");
-        SDL_FreeSurface(tmpSurface);
-        return false;
-    }
     for(int board_y = 0; board_y < ROWS; board_y++)
     {
         std::vector<Cell> cell_row;
         for(int board_x = 0; board_x < COLS; board_x++)
         {
             Cell cell;
-            populateCell(cell, board_x, board_y, tmpSurface);
+            populateCell(cell, board_x, board_y);
             cell_row.emplace_back(std::move(cell));
         }
         m_cells.emplace_back(std::move(cell_row));
     }
-    SDL_FreeSurface(tmpSurface);
     return true;
 }
 
-void Minesweeper::populateCell(Cell& cell, int x, int y, SDL_Surface * surface)
+void Minesweeper::populateCell(Cell& cell, int x, int y)
 {
     cell.x = x;
     cell.y = y;
@@ -82,7 +122,52 @@ void Minesweeper::populateCell(Cell& cell, int x, int y, SDL_Surface * surface)
     cell.rect.h = m_cell_height;
     cell.snooped = false;
     cell.proximity = 0;
-    cell.texture = SDL_CreateTextureFromSurface(m_renderer, surface);
+    cell.texture = m_cell_base_texture;
+    initCellNeighbours(cell);
+}
+
+
+void Minesweeper::initCellNeighbours(Cell& cell)
+{
+    //left border
+    if (cell.x == 0)
+    {
+        cell.neighbours.at( CELL_POS::TOP_LEFT ) = NULL;
+        cell.neighbours.at( CELL_POS::LEFT ) = NULL;
+        cell.neighbours.at( CELL_POS::BOTTOM_LEFT ) = NULL;
+        cell.neighbours.at( CELL_POS::RIGHT ) = &m_cells.at(cell.x+1).at(cell.y);
+        // top left
+        if (cell.y == 0)
+        {
+            cell.neighbours.at( CELL_POS::TOP ) = NULL;
+            cell.neighbours.at( CELL_POS::TOP_RIGHT ) = NULL;
+            cell.neighbours.at( CELL_POS::BOTTOM_RIGHT ) = &m_cells.at(cell.x+1).at(cell.y+1);
+            cell.neighbours.at( CELL_POS::BOTTOM ) = &m_cells.at(cell.x).at(cell.y+1);
+        }
+        //bottom left
+        else if (cell.y == ROWS)
+        {
+            cell.neighbours.at( CELL_POS::TOP ) = &m_cells.at(cell.x).at(cell.y-1); 
+            cell.neighbours.at( CELL_POS::TOP_RIGHT ) = &m_cells.at(cell.x+1).at(cell l.y-1);
+            cell.neighbours.at( CELL_POS::BOTTOM_RIGHT ) = NULL;
+            cell.neighbours.at( CELL_POS::BOTTOM ) = NULL;
+        }
+        //left
+        else
+        {
+            cell.neighbours.at( CELL_POS::TOP ) = &m_cells.at(cell.x).at(cell.y-1);
+            cell.neighbours.at( CELL_POS::TOP_RIGHT ) = &m_cells.at(cell.x+1).at(cell.y-1);
+            cell.neighbours.at( CELL_POS::BOTTOM_RIGHT ) = &m_cells.at(cell.x+1).at(cell.y+1);
+            cell.neighbours.at( CELL_POS::BOTTOM ) = &m_cells.at(cell.x).at(cell.y+1);
+
+        }
+
+    }
+    else if(cell.x == COLS)
+    {
+        // cell.neighbours.at( CELL_POS::LEFT ) = m_cells.at(col).at(row);
+    }
+
 }
 
 /**
@@ -126,4 +211,6 @@ void Minesweeper::handleMouse(Sint32 x, Sint32 y)
     Cell &cell = m_cells.at(col).at(row);
     printf("Cell ( %d, %d ): snooped: %d\n", cell.x, cell.y, cell.snooped);
     cell.snooped = true;
+    cell.texture = m_cell_0_texture;
+
 }

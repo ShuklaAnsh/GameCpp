@@ -25,6 +25,7 @@ class Minesweeper
     
     protected:
     private:
+         enum class CELL_POS { LEFT, TOP_LEFT, TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT };
 
     // API 
     public:
@@ -35,7 +36,6 @@ class Minesweeper
         void handleKey(SDL_Keycode& key_code);
         void handleMouse(Sint32 x, Sint32 y);
 
-        bool addNeighbour(Cell &neighbour);
         std::vector<Cell *> getNeighbours(Cell &neighbour);
         int getThreatLevel();
 
@@ -43,13 +43,26 @@ class Minesweeper
 
     private:
         bool initCells();
-        void populateCell(Cell& cell, int x, int y, SDL_Surface * surface);
+        void populateCell(Cell& cell, int x, int y);
+        void initCellNeighbours(Cell& cell);
     // Modules
     private:
         SDL_Renderer* m_renderer;    /* Pointer to the renderer for the Game */
         std::vector<std::vector<Cell>> m_cells; /* 2D vector array of cells */
         int m_cell_width;            /* int for Cell width    */
         int m_cell_height;           /* int for Cell height   */
+        SDL_Texture * m_cell_0_texture; /* Texture * for cell 0 */
+        SDL_Texture * m_cell_1_texture; /* Texture * for cell 1 */
+        SDL_Texture * m_cell_2_texture; /* Texture * for cell 2 */
+        SDL_Texture * m_cell_3_texture; /* Texture * for cell 3 */
+        SDL_Texture * m_cell_4_texture; /* Texture * for cell 4 */
+        SDL_Texture * m_cell_5_texture; /* Texture * for cell 5 */
+        SDL_Texture * m_cell_6_texture; /* Texture * for cell 6 */
+        SDL_Texture * m_cell_7_texture; /* Texture * for cell 7 */
+        SDL_Texture * m_cell_8_texture; /* Texture * for cell 8 */
+        SDL_Texture * m_cell_base_texture;
+        SDL_Texture * m_cell_flag_texture;
+        SDL_Texture * m_cell_bomg_texture;
 };
 
 #endif /* Minesweeper_hpp */

@@ -17,7 +17,7 @@
    id="svg8"
    inkscape:version="0.92.4 (33fec40, 2019-01-16)"
    sodipodi:docname="drawing.svg"
-   inkscape:export-filename="/home/ansh/Documents/github/GameCpp/Minesweeper/assets/cell8.png"
+   inkscape:export-filename="/home/ansh/Documents/github/GameCpp/Minesweeper/assets/flag.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -77,7 +77,7 @@
        height="167.82143"
        x="9.0714283"
        y="120.48512"
-       style="fill:#ffb380;stroke:#280b0b;stroke-width:13.229;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.95588237;paint-order:fill markers stroke;stroke-linecap:square"
+       style="fill:#ffe6d5;stroke:#280b0b;stroke-width:13.229;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.95588237;paint-order:fill markers stroke;stroke-linecap:square"
        ry="0" />
     <text
        xml:space="preserve"
@@ -99,7 +99,7 @@
          sodipodi:role="line"
          id="tspan3815"
          x="43.467262"
-         y="269.02972"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:176.3888855px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#311210;fill-opacity:1;stroke-width:0.26458332">8</tspan></text>
+         y="433.51099"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:176.3888855px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#311210;fill-opacity:1;stroke-width:0.26458332" /></text>
   </g>
 </svg>
