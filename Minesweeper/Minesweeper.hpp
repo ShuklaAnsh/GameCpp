@@ -11,8 +11,9 @@ class Minesweeper
     // Types
     public:
         enum CELL_POS { LEFT, TOP_LEFT, TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT , NUM_POSITIONS};
-        static const int ROWS = 20;    /* const int for num rows    */
-        static const int COLS = 20;    /* const int for num columns */
+        static const int ROWS = 10;         /* const int for num rows    */
+        static const int COLS = 10;         /* const int for num columns */
+        static const int NUM_BOMBS = 40;    /* const int for num bombs   */
         
         struct Cell
         {
@@ -23,6 +24,7 @@ class Minesweeper
             int proximity;                  /* int for proximity    */
             std::array<Cell *, CELL_POS::NUM_POSITIONS> neighbours;   /* Cell vector array for adjaent neighbours */
             bool snooped;                   /* bool for if the Cell has been visited  */
+            bool is_bomb;                   /* bool for if the Cell is a bomb */
         };  /* Struct for a Cell */
     
     protected:
@@ -46,8 +48,8 @@ class Minesweeper
     private:
         bool initCells();
         void populateCell(Cell& cell, int x, int y);
-        void initCellNeighbours(Cell& cell);
-
+        void initCellNeighbours();
+        void initBombs();
         void search(int x_i, int y_i, int val);
     // Modules
     private:

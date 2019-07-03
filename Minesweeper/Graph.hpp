@@ -4,12 +4,14 @@
 class Graph
 {
 private:
+    
+    enum CELL_POS { LEFT, TOP_LEFT, TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT , NUM_POSITIONS};
 
     struct Node
     {
         bool visited;
         int x, y, value;
-        std::array<Node *, 4> neighbours;
+        std::array<Node *, CELL_POS::NUM_POSITIONS> neighbours;
     };
     
 public:

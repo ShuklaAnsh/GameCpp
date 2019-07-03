@@ -111,6 +111,8 @@ bool Minesweeper::initCells()
         }
         m_cells.emplace_back(std::move(cell_row));
     }
+    initCellNeighbours();
+    initBombs();
     return true;
 }
 
@@ -123,13 +125,13 @@ void Minesweeper::populateCell(Cell& cell, int x, int y)
     cell.rect.w = m_cell_width;
     cell.rect.h = m_cell_height;
     cell.snooped = false;
+    cell.is_bomb = false;
     cell.proximity = 0;
     cell.texture = m_cell_base_texture;
-    initCellNeighbours(cell);
 }
 
 
-void Minesweeper::initCellNeighbours(Cell& cell)
+void Minesweeper::initCellNeighbours()
 {
     m_border_cell.proximity = -1;
     for (int y = 0; y < ROWS; y++)
@@ -291,10 +293,26 @@ void Minesweeper::handleMouse(Sint32 x, Sint32 y)
     int row = x/m_cell_width;
     int col = y/m_cell_height;
     Cell &cell = m_cells.at(col).at(row);
-    printf("Cell ( %d, %d ): snooped: %d\n", cell.x, cell.y, cell.snooped);
+    printf("Cell ( %d, %d ): bomb: %s\n", cell.x, cell.y, cell.is_bomb ? "true" : "false");
     cell.snooped = true;
     cell.texture = m_cell_0_texture;
 
+    printBoard();
+
+}
+
+
+void Minesweeper::initBombs()
+{
+    for (int i = 0; i < NUM_BOMBS; i++)
+    {
+        Cell & bomb_cell = m_cells.at(rand() % ROWS ).at(rand() % COLS );
+        bomb_cell.is_bomb = true;
+        for ( int j = 0; j < bomb_cell.neighbours.size(); j++ )
+        {
+            bomb_cell.neighbours[j]->proximity++;
+        }
+    }
 }
 
 
@@ -306,8 +324,11 @@ void Minesweeper::printBoard()
         std::string row;
         for (int x = 0; x < COLS; x++)
         {
-            std::string val = "[" + std::to_string(m_cells.at(y).at(x).proximity) + "]";
-            row += m_cells.at(y).at(x).snooped ? val : "[ ]";
+            Cell& cell = m_cells.at(y).at(x);
+
+            std::string val = cell.is_bomb ? "[x]" : "[" + std::to_string(cell.proximity) + "]";
+            row += val;
+            // row += m_cells.at(y).at(x).snooped ? val : "[ ]";
         }
         board += row + "\n";
     }

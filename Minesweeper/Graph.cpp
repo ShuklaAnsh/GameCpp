@@ -30,95 +30,111 @@ Graph::Graph(int rows, int cols) : ROWS(rows), COLS(cols)
             //top-left
             if ( ( x == 0 ) && ( y == 0 ))
             {
-                node.neighbours[0] = &m_border_node;
-                node.neighbours[1] = &m_border_node;
                 Node &right = m_grid.at(y).at(x+1);
                 Node &bottom = m_grid.at(y+1).at(x);
-                node.neighbours[2] = &right;
-                node.neighbours[3] = &bottom;
-                right.neighbours[0] = &node;
-                bottom.neighbours[1] = &node;
+                Node &bottom_right = m_grid.at(y+1).at(x+1);
+                node.neighbours[CELL_POS::LEFT] = &m_border_node;
+                node.neighbours[CELL_POS::TOP] = &m_border_node;
+                node.neighbours[CELL_POS::TOP_LEFT] = &m_border_node;
+                node.neighbours[CELL_POS::RIGHT] = &right;
+                node.neighbours[CELL_POS::BOTTOM] = &bottom;
+                node.neighbours[CELL_POS::BOTTOM_RIGHT] = &bottom_right;
+                right.neighbours[CELL_POS::LEFT] = &node;
+                bottom.neighbours[CELL_POS::TOP] = &node;
+                bottom_right.neighbours[CELL_POS::TOP_LEFT] = &node;
             }
             //top-right
             else if ( ( x == (COLS-1) ) && ( y == 0 ))
             {
-                node.neighbours[2] = &m_border_node;
-                node.neighbours[1] = &m_border_node;
                 Node &left = m_grid.at(y).at(x-1);
                 Node &bottom = m_grid.at(y+1).at(x);
-                node.neighbours[0] = &left;
-                node.neighbours[3] = &bottom;
-                left.neighbours[2] = &node;
-                bottom.neighbours[1] = &node;
+                Node &bottom_left = m_grid.at(y+1).at(x-1);
+                node.neighbours[CELL_POS::RIGHT] = &m_border_node;
+                node.neighbours[CELL_POS::TOP] = &m_border_node;
+                node.neighbours[CELL_POS::TOP_RIGHT] = &m_border_node;
+                node.neighbours[CELL_POS::LEFT] = &left;
+                node.neighbours[CELL_POS::BOTTOM] = &bottom;
+                node.neighbours[CELL_POS::BOTTOM_LEFT] = &bottom_left;
+                left.neighbours[CELL_POS::RIGHT] = &node;
+                bottom.neighbours[CELL_POS::TOP] = &node;
+                bottom_left.neighbours[CELL_POS::TOP_RIGHT] = &node;
             }
             //bottom-right
             else if ( ( x == (COLS-1) ) && ( y == (ROWS-1) ))
             {
-                node.neighbours[2] = &m_border_node;
-                node.neighbours[3] = &m_border_node;
-                Node &left = m_grid.at(y).at(x-1);
                 Node &top = m_grid.at(y-1).at(x);
-                node.neighbours[0] = &left;
-                node.neighbours[1] = &top;
-                left.neighbours[2] = &node;
-                top.neighbours[3] = &node;
+                Node &left = m_grid.at(y).at(x-1);
+                Node &top_left = m_grid.at(y-1).at(x-1);
+                node.neighbours[CELL_POS::RIGHT] = &m_border_node;
+                node.neighbours[CELL_POS::BOTTOM] = &m_border_node;
+                node.neighbours[CELL_POS::BOTTOM_RIGHT] = &m_border_node;
+                node.neighbours[CELL_POS::LEFT] = &left;
+                node.neighbours[CELL_POS::TOP] = &top;
+                node.neighbours[CELL_POS::TOP_LEFT] = &top_left;
+                left.neighbours[CELL_POS::RIGHT] = &node;
+                top.neighbours[CELL_POS::BOTTOM] = &node;
+                top_left.neighbours[CELL_POS::BOTTOM_RIGHT] = &node;
             }
             //bottom-left
             else if ( ( x == 0 ) && ( y == (ROWS-1) ))
             {
-                node.neighbours[0] = &m_border_node;
-                node.neighbours[3] = &m_border_node;
                 Node &right = m_grid.at(y).at(x+1);
                 Node &top = m_grid.at(y-1).at(x);
-                node.neighbours[2] = &right;
-                node.neighbours[1] = &top;
-                right.neighbours[0] = &node;
-                top.neighbours[3] = &node;
+                Node &top_right = m_grid.at(y-1).at(x+1);
+                node.neighbours[CELL_POS::LEFT] = &m_border_node;
+                node.neighbours[CELL_POS::BOTTOM] = &m_border_node;
+                node.neighbours[CELL_POS::BOTTOM_LEFT] = &m_border_node;
+                node.neighbours[CELL_POS::RIGHT] = &right;
+                node.neighbours[CELL_POS::TOP] = &top;
+                node.neighbours[CELL_POS::TOP_RIGHT] = &top_right;
+                right.neighbours[CELL_POS::LEFT] = &node;
+                top.neighbours[CELL_POS::BOTTOM] = &node;
+                top_right.neighbours[CELL_POS::BOTTOM_LEFT] = &node;
             }
             //border conditions
             //left border
             else if (x == 0)
             {
-                node.neighbours[0] = &m_border_node;
                 Node &top = m_grid.at(y-1).at(x);
                 Node &bottom = m_grid.at(y+1).at(x);
-                node.neighbours[1] = &top;
-                node.neighbours[3] = &bottom;
-                bottom.neighbours[1] = &node;
-                top.neighbours[3] = &node;
+                node.neighbours[CELL_POS::LEFT] = &m_border_node;
+                node.neighbours[CELL_POS::TOP] = &top;
+                node.neighbours[CELL_POS::BOTTOM] = &bottom;
+                bottom.neighbours[CELL_POS::TOP] = &node;
+                top.neighbours[CELL_POS::BOTTOM] = &node;
             }
             //top border
             else if (y == 0)
             {
-                node.neighbours[1] = &m_border_node;
                 Node &left = m_grid.at(y).at(x-1);
                 Node &right = m_grid.at(y).at(x+1);
-                node.neighbours[0] = &left;
-                node.neighbours[2] = &right;
-                left.neighbours[2] = &node;
-                right.neighbours[0] = &node;
+                node.neighbours[CELL_POS::TOP] = &m_border_node;
+                node.neighbours[CELL_POS::LEFT] = &left;
+                node.neighbours[CELL_POS::RIGHT] = &right;
+                left.neighbours[CELL_POS::RIGHT] = &node;
+                right.neighbours[CELL_POS::LEFT] = &node;
             }
             //right border
             else if (x == (COLS-1))
             {
-                node.neighbours[2] = &m_border_node;
+                node.neighbours[CELL_POS::RIGHT] = &m_border_node;
                 Node &top = m_grid.at(y-1).at(x);
                 Node &bottom = m_grid.at(y+1).at(x);
-                node.neighbours[1] = &top;
-                node.neighbours[3] = &bottom;
-                bottom.neighbours[1] = &node;
-                top.neighbours[3] = &node;
+                node.neighbours[CELL_POS::TOP] = &top;
+                node.neighbours[CELL_POS::BOTTOM] = &bottom;
+                bottom.neighbours[CELL_POS::TOP] = &node;
+                top.neighbours[CELL_POS::BOTTOM] = &node;
             }
             //bottom border
             else if (y == (ROWS-1))
             {
-                node.neighbours[3] = &m_border_node;
+                node.neighbours[CELL_POS::BOTTOM] = &m_border_node;
                 Node &left = m_grid.at(y).at(x-1);
                 Node &right = m_grid.at(y).at(x+1);
-                node.neighbours[0] = &left;
-                node.neighbours[2] = &right;
-                left.neighbours[2] = &node;
-                right.neighbours[0] = &node;
+                node.neighbours[CELL_POS::LEFT] = &left;
+                node.neighbours[CELL_POS::RIGHT] = &right;
+                left.neighbours[CELL_POS::RIGHT] = &node;
+                right.neighbours[CELL_POS::LEFT] = &node;
             }
             //everything else
             else
@@ -127,14 +143,26 @@ Graph::Graph(int rows, int cols) : ROWS(rows), COLS(cols)
                 Node &top = m_grid.at(y-1).at(x);
                 Node &right = m_grid.at(y).at(x+1);
                 Node &bottom = m_grid.at(y+1).at(x);
-                node.neighbours[0] = &left;
-                node.neighbours[1] = &top;
-                node.neighbours[2] = &right;
-                node.neighbours[3] = &bottom;
-                left.neighbours[2] = &node;
-                top.neighbours[3] = &node;
-                right.neighbours[0] = &node;
-                bottom.neighbours[1] = &node;
+                Node &top_left = m_grid.at(y-1).at(x-1);
+                Node &top_right = m_grid.at(y-1).at(x+1);
+                Node &bottom_left = m_grid.at(y+1).at(x-1);
+                Node &bottom_right = m_grid.at(y+1).at(x+1);
+                node.neighbours[CELL_POS::LEFT] = &left;
+                node.neighbours[CELL_POS::TOP] = &top;
+                node.neighbours[CELL_POS::RIGHT] = &right;
+                node.neighbours[CELL_POS::BOTTOM] = &bottom;
+                node.neighbours[CELL_POS::BOTTOM_LEFT] = &bottom_left;
+                node.neighbours[CELL_POS::BOTTOM_RIGHT] = &bottom_right;
+                node.neighbours[CELL_POS::TOP_LEFT] = &top_left;
+                node.neighbours[CELL_POS::TOP_RIGHT] = &top_right;
+                left.neighbours[CELL_POS::RIGHT] = &node;
+                top.neighbours[CELL_POS::BOTTOM] = &node;
+                right.neighbours[CELL_POS::LEFT] = &node;
+                bottom.neighbours[CELL_POS::TOP] = &node;
+                bottom_right.neighbours[CELL_POS::BOTTOM_RIGHT] = &node;
+                bottom_left.neighbours[CELL_POS::BOTTOM_LEFT] = &node;
+                top_right.neighbours[CELL_POS::TOP_RIGHT] = &node;
+                top_left.neighbours[CELL_POS::TOP_LEFT] = &node;
             }
         }
     }
@@ -171,6 +199,7 @@ void Graph::search(int x_i, int y_i, int val = 0)
 void Graph::visitNeighbours(Node &node, int val)
 {
     for (int i = 0; i < node.neighbours.size(); i++)
+    // for (int i = 0; i < node.neighbours.size(); i++)
     {
         if(node.neighbours.at(i)->value == -1 ){
             continue;
@@ -183,7 +212,7 @@ void Graph::visitNeighbours(Node &node, int val)
 int main()
 {
     Graph * G = new Graph(10, 10);
-    G->search(5, 9);
+    G->search(0, 0);
     G->printGraph();
     delete G;
     return 0;
