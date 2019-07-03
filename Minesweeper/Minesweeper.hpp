@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <vector>
+#include <array>
 
 class Minesweeper 
 {
@@ -20,7 +21,7 @@ class Minesweeper
             int x;                          /* int for x position   */
             int y;                          /* int for y position   */
             int proximity;                  /* int for proximity    */
-            Cell * neighbours[CELL_POS::NUM_POSITIONS];   /* Cell vector array for adjaent neighbours */
+            std::array<Cell *, CELL_POS::NUM_POSITIONS> neighbours;   /* Cell vector array for adjaent neighbours */
             bool snooped;                   /* bool for if the Cell has been visited  */
         };  /* Struct for a Cell */
     
@@ -38,6 +39,7 @@ class Minesweeper
 
         std::vector<Cell *> getNeighbours(Cell &neighbour);
         int getThreatLevel();
+        void printBoard();
 
     protected:
 
@@ -45,6 +47,8 @@ class Minesweeper
         bool initCells();
         void populateCell(Cell& cell, int x, int y);
         void initCellNeighbours(Cell& cell);
+
+        void search(int x_i, int y_i, int val);
     // Modules
     private:
         SDL_Renderer* m_renderer;    /* Pointer to the renderer for the Game */
@@ -64,6 +68,8 @@ class Minesweeper
         SDL_Texture * m_cell_base_texture;
         SDL_Texture * m_cell_flag_texture;
         SDL_Texture * m_cell_bomg_texture;
+
+        Cell m_border_cell;
 };
 
 #endif /* Minesweeper_hpp */

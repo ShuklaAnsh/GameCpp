@@ -95,7 +95,6 @@ bool Minesweeper::init(int board_width, int board_height)
     {
         return false;
     }
-
     return false;
 }
 
@@ -132,45 +131,125 @@ void Minesweeper::populateCell(Cell& cell, int x, int y)
 
 void Minesweeper::initCellNeighbours(Cell& cell)
 {
-    //left border
-    if (cell.x == 0)
+    m_border_cell.proximity = -1;
+    for (int y = 0; y < ROWS; y++)
     {
-        cell.neighbours[CELL_POS::TOP_LEFT] = &m_null_cell;
-        cell.neighbours[CELL_POS::LEFT] = &m_null_cell;
-        cell.neighbours[CELL_POS::BOTTOM_LEFT] = &m_null_cell;
-        cell.neighbours[CELL_POS::RIGHT] = &m_cells.at(cell.x+1).at(cell.y);
-        // top left
-        if (cell.y == 0)
+        for (int x = 0; x < COLS; x++)
         {
-            // cell.neighbours.at( CELL_POS::TOP ) = &m_null_cell;
-            // cell.neighbours.at( CELL_POS::TOP_RIGHT ) = &m_null_cell;
-            // cell.neighbours.at( CELL_POS::BOTTOM_RIGHT ) = &m_cells.at(cell.x+1).at(cell.y+1);
-            // cell.neighbours.at( CELL_POS::BOTTOM ) = &m_cells.at(cell.x).at(cell.y+1);
+            Cell &cell = m_cells.at(y).at(x);
+            
+            //corner conditions
+            //top-left
+            if ( ( x == 0 ) && ( y == 0 ))
+            {
+                cell.neighbours[0] = &m_border_cell;
+                cell.neighbours[1] = &m_border_cell;
+                Cell &right = m_cells.at(y).at(x+1);
+                Cell &bottom = m_cells.at(y+1).at(x);
+                cell.neighbours[2] = &right;
+                cell.neighbours[3] = &bottom;
+                right.neighbours[0] = &cell;
+                bottom.neighbours[1] = &cell;
+            }
+            //top-right
+            else if ( ( x == (COLS-1) ) && ( y == 0 ))
+            {
+                cell.neighbours[2] = &m_border_cell;
+                cell.neighbours[1] = &m_border_cell;
+                Cell &left = m_cells.at(y).at(x-1);
+                Cell &bottom = m_cells.at(y+1).at(x);
+                cell.neighbours[0] = &left;
+                cell.neighbours[3] = &bottom;
+                left.neighbours[2] = &cell;
+                bottom.neighbours[1] = &cell;
+            }
+            //bottom-right
+            else if ( ( x == (COLS-1) ) && ( y == (ROWS-1) ))
+            {
+                cell.neighbours[2] = &m_border_cell;
+                cell.neighbours[3] = &m_border_cell;
+                Cell &left = m_cells.at(y).at(x-1);
+                Cell &top = m_cells.at(y-1).at(x);
+                cell.neighbours[0] = &left;
+                cell.neighbours[1] = &top;
+                left.neighbours[2] = &cell;
+                top.neighbours[3] = &cell;
+            }
+            //bottom-left
+            else if ( ( x == 0 ) && ( y == (ROWS-1) ))
+            {
+                cell.neighbours[0] = &m_border_cell;
+                cell.neighbours[3] = &m_border_cell;
+                Cell &right = m_cells.at(y).at(x+1);
+                Cell &top = m_cells.at(y-1).at(x);
+                cell.neighbours[2] = &right;
+                cell.neighbours[1] = &top;
+                right.neighbours[0] = &cell;
+                top.neighbours[3] = &cell;
+            }
+            //border conditions
+            //left border
+            else if (x == 0)
+            {
+                cell.neighbours[0] = &m_border_cell;
+                Cell &top = m_cells.at(y-1).at(x);
+                Cell &bottom = m_cells.at(y+1).at(x);
+                cell.neighbours[1] = &top;
+                cell.neighbours[3] = &bottom;
+                bottom.neighbours[1] = &cell;
+                top.neighbours[3] = &cell;
+            }
+            //top border
+            else if (y == 0)
+            {
+                cell.neighbours[1] = &m_border_cell;
+                Cell &left = m_cells.at(y).at(x-1);
+                Cell &right = m_cells.at(y).at(x+1);
+                cell.neighbours[0] = &left;
+                cell.neighbours[2] = &right;
+                left.neighbours[2] = &cell;
+                right.neighbours[0] = &cell;
+            }
+            //right border
+            else if (x == (COLS-1))
+            {
+                cell.neighbours[2] = &m_border_cell;
+                Cell &top = m_cells.at(y-1).at(x);
+                Cell &bottom = m_cells.at(y+1).at(x);
+                cell.neighbours[1] = &top;
+                cell.neighbours[3] = &bottom;
+                bottom.neighbours[1] = &cell;
+                top.neighbours[3] = &cell;
+            }
+            //bottom border
+            else if (y == (ROWS-1))
+            {
+                cell.neighbours[3] = &m_border_cell;
+                Cell &left = m_cells.at(y).at(x-1);
+                Cell &right = m_cells.at(y).at(x+1);
+                cell.neighbours[0] = &left;
+                cell.neighbours[2] = &right;
+                left.neighbours[2] = &cell;
+                right.neighbours[0] = &cell;
+            }
+            //everything else
+            else
+            {
+                Cell &left = m_cells.at(y).at(x-1);
+                Cell &top = m_cells.at(y-1).at(x);
+                Cell &right = m_cells.at(y).at(x+1);
+                Cell &bottom = m_cells.at(y+1).at(x);
+                cell.neighbours[0] = &left;
+                cell.neighbours[1] = &top;
+                cell.neighbours[2] = &right;
+                cell.neighbours[3] = &bottom;
+                left.neighbours[2] = &cell;
+                top.neighbours[3] = &cell;
+                right.neighbours[0] = &cell;
+                bottom.neighbours[1] = &cell;
+            }
         }
-        //bottom left
-        else if (cell.y == ROWS)
-        {
-            // cell.neighbours.at( CELL_POS::TOP ) = &m_cells.at(cell.x).at(cell.y-1); 
-            // cell.neighbours.at( CELL_POS::TOP_RIGHT ) = &m_cells.at(cell.x+1).at(cell l.y-1);
-            // cell.neighbours.at( CELL_POS::BOTTOM_RIGHT ) = &m_null_cell;
-            // cell.neighbours.at( CELL_POS::BOTTOM ) = &m_null_cell;
-        }
-        //left
-        else
-        {
-            // cell.neighbours.at( CELL_POS::TOP ) = &m_cells.at(cell.x).at(cell.y-1);
-            // cell.neighbours.at( CELL_POS::TOP_RIGHT ) = &m_cells.at(cell.x+1).at(cell.y-1);
-            // cell.neighbours.at( CELL_POS::BOTTOM_RIGHT ) = &m_cells.at(cell.x+1).at(cell.y+1);
-            // cell.neighbours.at( CELL_POS::BOTTOM ) = &m_cells.at(cell.x).at(cell.y+1);
-
-        }
-
     }
-    else if(cell.x == COLS)
-    {
-        // cell.neighbours.at( CELL_POS::LEFT ) = m_cells.at(col).at(row);
-    }
-
 }
 
 /**
@@ -216,4 +295,22 @@ void Minesweeper::handleMouse(Sint32 x, Sint32 y)
     cell.snooped = true;
     cell.texture = m_cell_0_texture;
 
+}
+
+
+void Minesweeper::printBoard()
+{
+    std::string board = "\n";
+    for (int y = 0; y < ROWS; y++)
+    {
+        std::string row;
+        for (int x = 0; x < COLS; x++)
+        {
+            std::string val = "[" + std::to_string(m_cells.at(y).at(x).proximity) + "]";
+            row += m_cells.at(y).at(x).snooped ? val : "[ ]";
+        }
+        board += row + "\n";
+    }
+    board += "\n";
+    printf("%s", board.c_str());
 }

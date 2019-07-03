@@ -17,7 +17,8 @@ all : $(OBJS)
 test : $(OBJS)
 	$(CC) $(OBJS) -o test $(LFLAGS)
 
-
+Graph : Graph.cpp
+	$(CC) Graph.cpp -o Graph
 
 clean:
 	$(RM) *.o
