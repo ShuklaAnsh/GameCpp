@@ -50,10 +50,10 @@ class Minesweeper
         void populateCell(Cell& cell, int x, int y);
         void initCellNeighbours();
         void initBombs();
-        void search(int x_i, int y_i, int val);
-        void visitNeighbours(Cell &cell, int val);
+        void search(int x_i, int y_i, bool stop);
+        bool visitNeighbours(Cell &cell);
         void addNeighbours(Cell& cell, Cell& left, Cell& top_left, Cell& top, Cell& top_right, Cell& right, Cell& bottom_right, Cell& bottom, Cell& bottom_left);
-
+        void handleSelection(Cell &cell);
     // Modules
     private:
         SDL_Renderer* m_renderer;    /* Pointer to the renderer for the Game */

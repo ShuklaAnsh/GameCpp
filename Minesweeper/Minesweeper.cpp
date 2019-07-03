@@ -95,7 +95,8 @@ bool Minesweeper::init(int board_width, int board_height)
     {
         return false;
     }
-    return false;
+    printBoard(); // print to console for development
+    return true;
 }
 
 bool Minesweeper::initCells()
@@ -284,24 +285,76 @@ void Minesweeper::addNeighbours(Cell& cell, Cell& left, Cell& top_left, Cell& to
     cell.neighbours[CELL_POS::BOTTOM_LEFT] = &bottom_left;
 }
 
-void Minesweeper::search(int x_i, int y_i, int val = 0)
+void Minesweeper::search(int x_i, int y_i, bool stop = false)
 {
+    //base case
+    if(stop)
+    {
+        return;
+    }
     m_cells.at(y_i).at(x_i).snooped = true;
-    m_cells.at(y_i).at(x_i).proximity = val;
-    visitNeighbours(m_cells.at(y_i).at(x_i), val);
+    search(x_i, y_i, visitNeighbours(m_cells.at(y_i).at(x_i)));
 }
 
-void Minesweeper::visitNeighbours(Cell &cell, int val)
+bool Minesweeper::visitNeighbours(Cell &cell)
 {
-    for (int i = 0; i < cell.neighbours.size(); i++)
-    // for (int i = 0; i < cell.neighbours.size(); i++)
+    if (cell.snooped)
     {
-        if(cell.neighbours.at(i)->proximity == -1 ){
-            continue;
-        }
-        printf("%d: ( %d, %d )\n", i, cell.neighbours.at(i)->x, cell.neighbours.at(i)->y);
+        return true;
     }
-    printf("\n");
+    else
+    {
+        cell.snooped = true;
+        printf("\n\n%d\n\n", cell.proximity);
+        switch (cell.proximity)
+        {
+        case 1:
+            cell.texture = m_cell_1_texture;
+            break;
+
+        case 2:
+            cell.texture = m_cell_2_texture;
+            break;
+
+        case 3:
+            cell.texture = m_cell_3_texture;
+            break;
+
+        case 4:
+            cell.texture = m_cell_4_texture;
+            break;
+
+        case 5:
+            cell.texture = m_cell_5_texture;
+            break;
+
+        case 6:
+            cell.texture = m_cell_6_texture;
+            break;
+
+        case 7:
+            cell.texture = m_cell_7_texture;
+            break;
+
+        case 8:
+            cell.texture = m_cell_8_texture;
+            break;
+        
+        default:
+            cell.texture = m_cell_0_texture;
+            break;
+        }
+
+        for (int i = 0; i < cell.neighbours.size(); i++)
+        {
+            if (cell.neighbours.at(i)->proximity == -1)
+            {
+                continue;
+            }
+            search(cell.x, cell.y, false);
+        }
+    }
+    return false;
 }
 
 /**
@@ -343,14 +396,16 @@ void Minesweeper::handleMouse(Sint32 x, Sint32 y)
     int row = x/m_cell_width;
     int col = y/m_cell_height;
     Cell &cell = m_cells.at(col).at(row);
-    printf("Cell ( %d, %d ): bomb: %s\n", cell.x, cell.y, cell.is_bomb ? "true" : "false");
-    cell.snooped = true;
-    cell.texture = m_cell_0_texture;
-
-    printBoard();
-
+    handleSelection(cell);
 }
 
+
+void Minesweeper::handleSelection(Cell &cell)
+{
+    printf("Cell ( %d, %d ): bomb: %s\n", cell.x, cell.y, cell.is_bomb ? "true" : "false");
+    search(cell.x, cell.y);
+    printBoard();
+}
 
 void Minesweeper::initBombs()
 {
