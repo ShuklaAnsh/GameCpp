@@ -13,7 +13,9 @@ class Minesweeper
         enum CELL_POS { LEFT, TOP_LEFT, TOP, TOP_RIGHT, RIGHT, BOTTOM_RIGHT, BOTTOM, BOTTOM_LEFT , NUM_POSITIONS};
         static const int ROWS = 10;         /* const int for num rows    */
         static const int COLS = 10;         /* const int for num columns */
-        static const int NUM_BOMBS = 40;    /* const int for num bombs   */
+        static const int NUM_BOMBS = 15;    /* const int for num bombs   */
+        static const int THREAT_LEVEL_MIDNIGHT = 9;    /* const int proximity as bomb */
+        static const int FLAG = 10;    /* const int for num bombs   */
         
         struct Cell
         {
@@ -22,9 +24,10 @@ class Minesweeper
             int x;                          /* int for x position   */
             int y;                          /* int for y position   */
             int proximity;                  /* int for proximity    */
-            std::array<Cell *, CELL_POS::NUM_POSITIONS> neighbours;   /* Cell vector array for adjaent neighbours */
             bool snooped;                   /* bool for if the Cell has been visited  */
             bool is_bomb;                   /* bool for if the Cell is a bomb */
+            bool is_flag;                   /* bool for if the Cell is flagged */
+            std::array<Cell *, CELL_POS::NUM_POSITIONS> neighbours;   /* Cell vector array for adjaent neighbours */
         };  /* Struct for a Cell */
     
     protected:
@@ -37,7 +40,7 @@ class Minesweeper
         bool init(int board_width, int board_height);
         void render();
         void handleKey(SDL_Keycode& key_code);
-        void handleMouse(Sint32 x, Sint32 y);
+        void handleMouse(Sint32 x, Sint32 y, Uint8 button);
 
         std::vector<Cell *> getNeighbours(Cell &neighbour);
         int getThreatLevel();
@@ -49,15 +52,14 @@ class Minesweeper
         bool initCells();
         void populateCell(Cell& cell, int x, int y);
         void initCellNeighbours();
-        void initBombs();
-        void search(int x_i, int y_i, bool stop);
-        bool visitNeighbours(Cell &cell);
+        void initBombs(Cell &cell);
+        void search(Cell &cell);
         void addNeighbours(Cell& cell, Cell& left, Cell& top_left, Cell& top, Cell& top_right, Cell& right, Cell& bottom_right, Cell& bottom, Cell& bottom_left);
         void handleSelection(Cell &cell);
+        void applyTexture(Cell &cell);
     // Modules
     private:
         SDL_Renderer* m_renderer;    /* Pointer to the renderer for the Game */
-        Cell m_null_cell; 
         std::vector<std::vector<Cell>> m_cells; /* 2D vector array of cells */
         int m_cell_width;            /* int for Cell width    */
         int m_cell_height;           /* int for Cell height   */
@@ -72,8 +74,8 @@ class Minesweeper
         SDL_Texture * m_cell_8_texture; /* Texture * for cell 8 */
         SDL_Texture * m_cell_base_texture;
         SDL_Texture * m_cell_flag_texture;
-        SDL_Texture * m_cell_bomg_texture;
-
+        SDL_Texture * m_cell_bomb_texture;
+        int m_moves;
         Cell m_border_cell;
 };
 

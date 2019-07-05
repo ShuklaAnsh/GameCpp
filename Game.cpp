@@ -122,7 +122,7 @@ void Game::eventHandler()
 
         case SDL_MOUSEBUTTONDOWN:
             // printf("Mouse x: %d, Mouse y: %d\n", e.button.x, e.button.y);
-            m_minesweeper->handleMouse(e.button.x, e.button.y);
+            m_minesweeper->handleMouse(e.button.x, e.button.y, e.button.button);
             break;
 
         default:
