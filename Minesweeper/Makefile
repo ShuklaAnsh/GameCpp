@@ -1,6 +1,5 @@
 #OBJS specifies which files to compile as part of the project
-OBJS =  Minesweeper.cpp test.cpp
-
+OBJS =  Minesweeper.cpp
 #CC specifies which compiler we're using
 CC = g++
 

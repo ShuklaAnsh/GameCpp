@@ -8,8 +8,6 @@ Game::Game(): m_running(false)
     , m_window(NULL)
     , m_screen_surface(NULL)
     , m_renderer(NULL)
-    // ,m_character(NULL)
-    , m_minesweeper(NULL)
 {
 }
 
@@ -20,8 +18,6 @@ Game::Game(): m_running(false)
  */
 Game::~Game()
 {
-    // delete m_character;
-    delete m_minesweeper;
     SDL_DestroyWindow( m_window );
     SDL_DestroyRenderer( m_renderer );
     SDL_Quit();
@@ -72,12 +68,21 @@ bool Game::init(const char* title, int x, int y, int height, int width, bool ful
     }
     
     printf( "Renderer created.\n" );
-    
-    m_minesweeper = new Minesweeper(m_renderer);
-    m_minesweeper->init(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    m_running = true;
+    m_running = initPostHook();
     return m_running;
+}
+
+
+/**
+ * @brief meant to be overwritten by derived class
+ * 
+ * @return true
+ * @return false 
+ */
+bool Game::initPostHook()
+{
+    return false;
 }
 
 
@@ -90,6 +95,16 @@ bool Game::init(const char* title, int x, int y, int height, int width, bool ful
 bool Game::isRunning()
 {
     return m_running;
+}
+
+
+/**
+ * @brief Stops running the game
+ * 
+ */
+void Game::stopGame()
+{
+    m_running = false;
 }
 
 
@@ -108,21 +123,11 @@ void Game::eventHandler()
             break;
         
         case SDL_KEYDOWN:
-            if(e.key.repeat == 0)
-            {
-                //m_character->resetVelocity();
-                //m_character->move(e.key.keysym.sym);
-            }
-            else
-            {
-                //m_character->accelerate(e.key.keysym.sym);
-                //m_character->move(e.key.keysym.sym);
-            }
+            handleKey(e.key);
             break;
 
         case SDL_MOUSEBUTTONDOWN:
-            // printf("Mouse x: %d, Mouse y: %d\n", e.button.x, e.button.y);
-            m_minesweeper->handleMouse(e.button.x, e.button.y, e.button.button);
+            handleMouse(e.button);
             break;
 
         default:
@@ -132,21 +137,71 @@ void Game::eventHandler()
 
 
 /**
+ * @brief meant to be overriden
+ * 
+ * @param mouse_button 
+ */
+void Game::handleKey(SDL_KeyboardEvent& key_event)
+{
+
+}
+
+
+/**
+ * @brief meant to be overriden
+ * 
+ * @param mouse_button 
+ */
+void Game::handleMouse(SDL_MouseButtonEvent& mouse_button)
+{
+
+}
+/**
  * @brief Render onto screen
  * 
  */
 void Game::render()
 {
+    renderPreHook();
     SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
     SDL_RenderClear(m_renderer);
     /******************************/
     /* Render stuff in this block */
-    //m_character->render();
-    m_minesweeper->render();
+    renderMidHook();
     /******************************/
     SDL_RenderPresent(m_renderer);
+    renderPostHook();
 }
 
+
+/**
+ * @brief meant to be overwritten by derived class
+ * 
+ */
+void Game::renderPreHook()
+{
+    return;
+}
+
+
+/**
+ * @brief meant to be overwritten by derived class
+ * 
+ */
+void Game::renderMidHook()
+{
+    return;
+}
+
+
+/**
+ * @brief meant to be overwritten by derived class
+ * 
+ */
+void Game::renderPostHook()
+{
+    return;
+}
 
 /**
  * @brief Update Game
@@ -156,20 +211,4 @@ void Game::update()
 {
     eventHandler();
     render();
-}
-
-
-int main(int argc, char const *argv[])
-{
-    Game* game = new Game();
-
-    game->init("Minesweeper", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, game->SCREEN_WIDTH, game->SCREEN_HEIGHT, false);
-
-    while( game->isRunning() )
-    {
-        game->update();
-        SDL_Delay(1);
-    }
-    delete game;
-    return 0;    
 }

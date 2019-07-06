@@ -5,8 +5,9 @@
 #include <SDL2/SDL_image.h>
 #include <vector>
 #include <array>
+#include "../Game.hpp"
 
-class Minesweeper 
+class Minesweeper : public Game 
 {
     // Types
     public:
@@ -35,18 +36,20 @@ class Minesweeper
 
     // API 
     public:
-        Minesweeper(SDL_Renderer* renderer);
+        Minesweeper();
         ~Minesweeper();
-        bool init(int board_width, int board_height);
-        void render();
-        void handleKey(SDL_Keycode& key_code);
-        void handleMouse(Sint32 x, Sint32 y, Uint8 button);
 
         std::vector<Cell *> getNeighbours(Cell &neighbour);
         int getThreatLevel();
         void printBoard();
 
     protected:
+        bool initPostHook() override;
+        void renderPreHook() override;
+        void renderMidHook() override;
+        void renderPostHook() override;
+        void handleKey(SDL_KeyboardEvent& key_event) override;
+        void handleMouse(SDL_MouseButtonEvent& mouse_event) override;
 
     private:
         bool initCells();
@@ -58,12 +61,15 @@ class Minesweeper
         void handleSelection(Cell &cell);
         void applyTexture(Cell &cell);
         void gameOver(Cell &cell);
+
     // Modules
+    public:
+        const char * m_title;  /* Char array for the game's title */
+
     private:
-        SDL_Renderer* m_renderer;    /* Pointer to the renderer for the Game */
         std::vector<std::vector<Cell>> m_cells; /* 2D vector array of cells */
-        int m_cell_width;            /* int for Cell width    */
-        int m_cell_height;           /* int for Cell height   */
+        int m_cell_width;  /* int for Cell width    */
+        int m_cell_height; /* int for Cell height   */
         SDL_Texture * m_cell_0_texture; /* Texture * for cell 0 */
         SDL_Texture * m_cell_1_texture; /* Texture * for cell 1 */
         SDL_Texture * m_cell_2_texture; /* Texture * for cell 2 */

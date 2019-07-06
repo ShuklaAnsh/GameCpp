@@ -1,63 +1,15 @@
 #include "Minesweeper.hpp"
 #include <stdio.h>      /* printf */
 #include <math.h>       /* floor */
+#include <ctime>
 
 /**
  * @brief Construct a new Minesweeper::Minesweeper object
  * 
  * @param renderer - SDL_Renderer used by the game
  */
-Minesweeper::Minesweeper(SDL_Renderer* renderer) : m_renderer(renderer)
+Minesweeper::Minesweeper() : m_title("Minesweeper")
 {
-    SDL_Surface * cell_0_surface = IMG_Load("./Minesweeper/assets/cell0.png");
-    SDL_Surface * cell_1_surface = IMG_Load("./Minesweeper/assets/cell1.png");
-    SDL_Surface * cell_2_surface = IMG_Load("./Minesweeper/assets/cell2.png");
-    SDL_Surface * cell_3_surface = IMG_Load("./Minesweeper/assets/cell3.png");
-    SDL_Surface * cell_4_surface = IMG_Load("./Minesweeper/assets/cell4.png");
-    SDL_Surface * cell_5_surface = IMG_Load("./Minesweeper/assets/cell5.png");
-    SDL_Surface * cell_6_surface = IMG_Load("./Minesweeper/assets/cell6.png");
-    SDL_Surface * cell_7_surface = IMG_Load("./Minesweeper/assets/cell7.png");
-    SDL_Surface * cell_8_surface = IMG_Load("./Minesweeper/assets/cell8.png");
-    SDL_Surface * cell_base_surface = IMG_Load("./Minesweeper/assets/cell_base.png");
-    SDL_Surface * cell_flag_surface = IMG_Load("./Minesweeper/assets/flag.png");
-    SDL_Surface * cell_good_flag_surface = IMG_Load("./Minesweeper/assets/goodflag.png");
-    SDL_Surface * cell_bad_flag_surface = IMG_Load("./Minesweeper/assets/badflag.png");
-    SDL_Surface * cell_bomb_surface = IMG_Load("./Minesweeper/assets/bomb.png");
-    SDL_Surface * cell_boom_surface = IMG_Load("./Minesweeper/assets/boom.png");
-    m_cell_0_texture = SDL_CreateTextureFromSurface(m_renderer, cell_0_surface);
-    m_cell_1_texture = SDL_CreateTextureFromSurface(m_renderer, cell_1_surface);
-    m_cell_2_texture = SDL_CreateTextureFromSurface(m_renderer, cell_2_surface);
-    m_cell_3_texture = SDL_CreateTextureFromSurface(m_renderer, cell_3_surface);
-    m_cell_4_texture = SDL_CreateTextureFromSurface(m_renderer, cell_4_surface);
-    m_cell_5_texture = SDL_CreateTextureFromSurface(m_renderer, cell_5_surface);
-    m_cell_6_texture = SDL_CreateTextureFromSurface(m_renderer, cell_6_surface);
-    m_cell_7_texture = SDL_CreateTextureFromSurface(m_renderer, cell_7_surface);
-    m_cell_8_texture = SDL_CreateTextureFromSurface(m_renderer, cell_8_surface);
-    m_cell_base_texture = SDL_CreateTextureFromSurface(m_renderer, cell_base_surface);
-    m_cell_flag_texture = SDL_CreateTextureFromSurface(m_renderer, cell_flag_surface);
-    m_cell_good_flag_texture = SDL_CreateTextureFromSurface(m_renderer, cell_good_flag_surface);
-    m_cell_bad_flag_texture = SDL_CreateTextureFromSurface(m_renderer, cell_bad_flag_surface);
-    m_cell_bomb_texture = SDL_CreateTextureFromSurface(m_renderer, cell_bomb_surface);
-    m_cell_boom_texture = SDL_CreateTextureFromSurface(m_renderer, cell_boom_surface);
-    SDL_FreeSurface(cell_0_surface);
-    SDL_FreeSurface(cell_1_surface);
-    SDL_FreeSurface(cell_2_surface);
-    SDL_FreeSurface(cell_3_surface);
-    SDL_FreeSurface(cell_4_surface);
-    SDL_FreeSurface(cell_5_surface);
-    SDL_FreeSurface(cell_6_surface);
-    SDL_FreeSurface(cell_7_surface);
-    SDL_FreeSurface(cell_8_surface);
-    SDL_FreeSurface(cell_base_surface);
-    SDL_FreeSurface(cell_flag_surface);
-    SDL_FreeSurface(cell_good_flag_surface);
-    SDL_FreeSurface(cell_bad_flag_surface);
-    SDL_FreeSurface(cell_bomb_surface);
-    SDL_FreeSurface(cell_boom_surface);
-    m_border_cell.proximity = -1;
-    m_border_cell.is_bomb = false;
-    m_border_cell.snooped = true;
-    m_moves = 0;
 }
 
 
@@ -92,9 +44,64 @@ Minesweeper::~Minesweeper()
  * @param board_height 
  * @return true if initialized successfully
  */
-bool Minesweeper::init(int board_width, int board_height)
+bool Minesweeper::initPostHook()
 {
-    int max_px = std::max(board_width, board_height);
+    srand ( time(NULL) );
+    SDL_Surface * cell_0_surface = IMG_Load("./Minesweeper/assets/cell0.png");
+    SDL_Surface * cell_1_surface = IMG_Load("./Minesweeper/assets/cell1.png");
+    SDL_Surface * cell_2_surface = IMG_Load("./Minesweeper/assets/cell2.png");
+    SDL_Surface * cell_3_surface = IMG_Load("./Minesweeper/assets/cell3.png");
+    SDL_Surface * cell_4_surface = IMG_Load("./Minesweeper/assets/cell4.png");
+    SDL_Surface * cell_5_surface = IMG_Load("./Minesweeper/assets/cell5.png");
+    SDL_Surface * cell_6_surface = IMG_Load("./Minesweeper/assets/cell6.png");
+    SDL_Surface * cell_7_surface = IMG_Load("./Minesweeper/assets/cell7.png");
+    SDL_Surface * cell_8_surface = IMG_Load("./Minesweeper/assets/cell8.png");
+    SDL_Surface * cell_base_surface = IMG_Load("./Minesweeper/assets/cell_base.png");
+    SDL_Surface * cell_flag_surface = IMG_Load("./Minesweeper/assets/flag.png");
+    SDL_Surface * cell_good_flag_surface = IMG_Load("./Minesweeper/assets/goodflag.png");
+    SDL_Surface * cell_bad_flag_surface = IMG_Load("./Minesweeper/assets/badflag.png");
+    SDL_Surface * cell_bomb_surface = IMG_Load("./Minesweeper/assets/bomb.png");
+    SDL_Surface * cell_boom_surface = IMG_Load("./Minesweeper/assets/boom.png");
+    m_cell_0_texture = SDL_CreateTextureFromSurface(m_renderer, cell_0_surface);
+    if (m_renderer == NULL)
+    {
+        printf("renderer nah");
+    }
+    m_cell_1_texture = SDL_CreateTextureFromSurface(m_renderer, cell_1_surface);
+    m_cell_2_texture = SDL_CreateTextureFromSurface(m_renderer, cell_2_surface);
+    m_cell_3_texture = SDL_CreateTextureFromSurface(m_renderer, cell_3_surface);
+    m_cell_4_texture = SDL_CreateTextureFromSurface(m_renderer, cell_4_surface);
+    m_cell_5_texture = SDL_CreateTextureFromSurface(m_renderer, cell_5_surface);
+    m_cell_6_texture = SDL_CreateTextureFromSurface(m_renderer, cell_6_surface);
+    m_cell_7_texture = SDL_CreateTextureFromSurface(m_renderer, cell_7_surface);
+    m_cell_8_texture = SDL_CreateTextureFromSurface(m_renderer, cell_8_surface);
+    m_cell_base_texture = SDL_CreateTextureFromSurface(m_renderer, cell_base_surface);
+    m_cell_flag_texture = SDL_CreateTextureFromSurface(m_renderer, cell_flag_surface);
+    m_cell_good_flag_texture = SDL_CreateTextureFromSurface(m_renderer, cell_good_flag_surface);
+    m_cell_bad_flag_texture = SDL_CreateTextureFromSurface(m_renderer, cell_bad_flag_surface);
+    m_cell_bomb_texture = SDL_CreateTextureFromSurface(m_renderer, cell_bomb_surface);
+    m_cell_boom_texture = SDL_CreateTextureFromSurface(m_renderer, cell_boom_surface);
+    SDL_FreeSurface(cell_0_surface);
+    SDL_FreeSurface(cell_1_surface);
+    SDL_FreeSurface(cell_2_surface);
+    SDL_FreeSurface(cell_3_surface);
+    SDL_FreeSurface(cell_4_surface);
+    SDL_FreeSurface(cell_5_surface);
+    SDL_FreeSurface(cell_6_surface);
+    SDL_FreeSurface(cell_7_surface);
+    SDL_FreeSurface(cell_8_surface);
+    SDL_FreeSurface(cell_base_surface);
+    SDL_FreeSurface(cell_flag_surface);
+    SDL_FreeSurface(cell_good_flag_surface);
+    SDL_FreeSurface(cell_bad_flag_surface);
+    SDL_FreeSurface(cell_bomb_surface);
+    SDL_FreeSurface(cell_boom_surface);
+    m_border_cell.proximity = -1;
+    m_border_cell.is_bomb = false;
+    m_border_cell.snooped = true;
+    m_moves = 0;
+
+    int max_px = std::max(SCREEN_WIDTH, SCREEN_HEIGHT);
     int max_units = std::max(COLS, ROWS);
     m_cell_height = ceil(max_px / max_units);
     m_cell_width = m_cell_height;
@@ -332,10 +339,20 @@ void Minesweeper::addNeighbours(Cell& cell, Cell& left, Cell& top_left, Cell& to
 
 
 /**
+ * @brief Does nothing
+ * 
+ */
+void Minesweeper::renderPreHook()
+{
+    return;
+}
+
+
+/**
  * @brief Renders the cell textures
  * 
  */
-void Minesweeper::render()
+void Minesweeper::renderMidHook()
 {
     for (const auto& cell_row : m_cells)
     {
@@ -348,11 +365,22 @@ void Minesweeper::render()
 
 
 /**
+ * @brief Does nothing
+ * 
+ */
+void Minesweeper::renderPostHook()
+{
+    // game over msg would go here
+    return;
+}
+
+
+/**
  * @brief Handles keyboard button click
  * 
- * @param key_code - key code of keyboard button pressed
+ * @param key_event - SDL_KeyboardEvent of keyboard button pressed
  */
-void Minesweeper::handleKey(SDL_Keycode& key_code)
+void Minesweeper::handleKey(SDL_KeyboardEvent& key_event)
 {
 
 }
@@ -361,13 +389,13 @@ void Minesweeper::handleKey(SDL_Keycode& key_code)
 /**
  * @brief Handles mouse button click
  * 
- * @param x - Mouse x position of mouse click
- * @param y - Mouse y position of mouse click
+ * @param mouse_event - SDL_MouseButtonEvent of mouse click received
  */
-void Minesweeper::handleMouse(Sint32 x, Sint32 y, Uint8 button)
+void Minesweeper::handleMouse(SDL_MouseButtonEvent& mouse_event)
 {
-    int row = x/m_cell_width;
-    int col = y/m_cell_height;
+    Uint8 button = mouse_event.button;
+    int row = mouse_event.x/m_cell_width;
+    int col = mouse_event.y/m_cell_height;
     Cell &cell = m_cells.at(col).at(row);
     if(button == SDL_BUTTON_LEFT)
     {
