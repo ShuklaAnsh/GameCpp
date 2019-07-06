@@ -52,6 +52,7 @@ class Minesweeper : public Game
         void handleMouse(SDL_MouseButtonEvent& mouse_event) override;
 
     private:
+        void initTextures();
         bool initCells();
         void populateCell(Cell& cell, int x, int y);
         void initCellNeighbours();
@@ -59,6 +60,7 @@ class Minesweeper : public Game
         void search(Cell &cell);
         void addNeighbours(Cell& cell, Cell& left, Cell& top_left, Cell& top, Cell& top_right, Cell& right, Cell& bottom_right, Cell& bottom, Cell& bottom_left);
         void handleSelection(Cell &cell);
+        void handleFlag(Cell &cell);
         void applyTexture(Cell &cell);
         void gameOver(Cell &cell);
 

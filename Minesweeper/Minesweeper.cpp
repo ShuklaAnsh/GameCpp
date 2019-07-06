@@ -47,6 +47,39 @@ Minesweeper::~Minesweeper()
 bool Minesweeper::initPostHook()
 {
     srand ( time(NULL) );
+    initTextures();
+    m_border_cell.proximity = -1;
+    m_border_cell.is_bomb = false;
+    m_border_cell.snooped = true;
+    m_moves = 0;
+
+    int max_px = std::max(m_screen_width, m_screen_height);
+    int max_units = std::max(COLS, ROWS);
+    m_cell_height = ceil(max_px / max_units);
+    m_cell_width = m_cell_height;
+    
+    if ( (m_cell_width < 0) || (m_cell_height < 0) )
+    {
+        printf("cell width || height incorect.\n");
+        return false;
+    }  
+
+    if ( ! initCells() )
+    {
+        return false;
+    }
+    printBoard(); // print to console for development
+    return true;
+}
+
+
+/**
+ * @brief inititialize textures
+ * TODO: fallback when failure
+ * 
+ */
+void Minesweeper::initTextures()
+{
     SDL_Surface * cell_0_surface = IMG_Load("./Minesweeper/assets/cell0.png");
     SDL_Surface * cell_1_surface = IMG_Load("./Minesweeper/assets/cell1.png");
     SDL_Surface * cell_2_surface = IMG_Load("./Minesweeper/assets/cell2.png");
@@ -63,10 +96,6 @@ bool Minesweeper::initPostHook()
     SDL_Surface * cell_bomb_surface = IMG_Load("./Minesweeper/assets/bomb.png");
     SDL_Surface * cell_boom_surface = IMG_Load("./Minesweeper/assets/boom.png");
     m_cell_0_texture = SDL_CreateTextureFromSurface(m_renderer, cell_0_surface);
-    if (m_renderer == NULL)
-    {
-        printf("renderer nah");
-    }
     m_cell_1_texture = SDL_CreateTextureFromSurface(m_renderer, cell_1_surface);
     m_cell_2_texture = SDL_CreateTextureFromSurface(m_renderer, cell_2_surface);
     m_cell_3_texture = SDL_CreateTextureFromSurface(m_renderer, cell_3_surface);
@@ -96,28 +125,7 @@ bool Minesweeper::initPostHook()
     SDL_FreeSurface(cell_bad_flag_surface);
     SDL_FreeSurface(cell_bomb_surface);
     SDL_FreeSurface(cell_boom_surface);
-    m_border_cell.proximity = -1;
-    m_border_cell.is_bomb = false;
-    m_border_cell.snooped = true;
-    m_moves = 0;
-
-    int max_px = std::max(SCREEN_WIDTH, SCREEN_HEIGHT);
-    int max_units = std::max(COLS, ROWS);
-    m_cell_height = ceil(max_px / max_units);
-    m_cell_width = m_cell_height;
     
-    if ( (m_cell_width < 0) || (m_cell_height < 0) )
-    {
-        printf("cell width || height incorect.\n");
-        return false;
-    }  
-
-    if ( ! initCells() )
-    {
-        return false;
-    }
-    printBoard(); // print to console for development
-    return true;
 }
 
 
@@ -403,11 +411,7 @@ void Minesweeper::handleMouse(SDL_MouseButtonEvent& mouse_event)
     }
     else
     {
-        if(!cell.snooped)
-        {
-            cell.is_flag = !cell.is_flag;
-            cell.texture = cell.is_flag ? m_cell_flag_texture : m_cell_base_texture;
-        }
+        handleFlag(cell);
     }
 }
 
@@ -434,6 +438,21 @@ void Minesweeper::handleSelection(Cell &cell)
         search(cell);
     }
     printBoard();
+}
+
+
+/**
+ * @brief handle flag selection.
+ * 
+ * @param cell - cell that was flagged
+ */
+void Minesweeper::handleFlag(Cell &cell)
+{
+    if(!cell.snooped)
+    {
+        cell.is_flag = !cell.is_flag;
+        cell.texture = cell.is_flag ? m_cell_flag_texture : m_cell_base_texture;
+    }
 }
 
 

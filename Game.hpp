@@ -9,8 +9,8 @@ class Game
     // Types
     public:
         //Screen dimension constants
-        const int SCREEN_WIDTH = 700;
-        const int SCREEN_HEIGHT = 700;
+        const static int MAX_SCREEN_WIDTH = 1000;
+        const static int MAX_SCREEN_HEIGHT = 1000;
     protected:
     private:
 
@@ -43,5 +43,7 @@ class Game
         SDL_Window*     m_window;          /* Pointer to the window being rendering to      */
         SDL_Surface*    m_screen_surface;  /* Pointer to the surface the window will be on  */
         SDL_Renderer*   m_renderer;        /* Pointer to the renderer                       */
+        int             m_screen_width;    /* int to the screen width                       */
+        int             m_screen_height;   /* int to the screen height                      */
 };
 #endif /* Game_hpp */

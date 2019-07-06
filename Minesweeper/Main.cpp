@@ -5,7 +5,8 @@ int main(int argc, char const *argv[])
 {
     Minesweeper* game = new Minesweeper();
     
-    game->init(game->m_title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, game->SCREEN_WIDTH, game->SCREEN_HEIGHT, false);
+    // game->initPreHook(ROWS, WIDTH, BOMBS); //difficulty
+    game->init(game->m_title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 800, false);
 
     while( game->isRunning() )
     {

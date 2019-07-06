@@ -38,7 +38,9 @@ Game::~Game()
  */
 bool Game::init(const char* title, int x, int y, int height, int width, bool fullscreen)
 {  
-    
+    //TODO: check if bigger than max reso;
+    m_screen_height = height;
+    m_screen_width = width;
     //Initialize SDL Video 
     if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
     {
@@ -156,6 +158,8 @@ void Game::handleMouse(SDL_MouseButtonEvent& mouse_button)
 {
 
 }
+
+
 /**
  * @brief Render onto screen
  * 
