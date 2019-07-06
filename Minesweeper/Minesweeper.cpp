@@ -20,7 +20,10 @@ Minesweeper::Minesweeper(SDL_Renderer* renderer) : m_renderer(renderer)
     SDL_Surface * cell_8_surface = IMG_Load("./Minesweeper/assets/cell8.png");
     SDL_Surface * cell_base_surface = IMG_Load("./Minesweeper/assets/cell_base.png");
     SDL_Surface * cell_flag_surface = IMG_Load("./Minesweeper/assets/flag.png");
+    SDL_Surface * cell_good_flag_surface = IMG_Load("./Minesweeper/assets/goodflag.png");
+    SDL_Surface * cell_bad_flag_surface = IMG_Load("./Minesweeper/assets/badflag.png");
     SDL_Surface * cell_bomb_surface = IMG_Load("./Minesweeper/assets/bomb.png");
+    SDL_Surface * cell_boom_surface = IMG_Load("./Minesweeper/assets/boom.png");
     m_cell_0_texture = SDL_CreateTextureFromSurface(m_renderer, cell_0_surface);
     m_cell_1_texture = SDL_CreateTextureFromSurface(m_renderer, cell_1_surface);
     m_cell_2_texture = SDL_CreateTextureFromSurface(m_renderer, cell_2_surface);
@@ -32,7 +35,10 @@ Minesweeper::Minesweeper(SDL_Renderer* renderer) : m_renderer(renderer)
     m_cell_8_texture = SDL_CreateTextureFromSurface(m_renderer, cell_8_surface);
     m_cell_base_texture = SDL_CreateTextureFromSurface(m_renderer, cell_base_surface);
     m_cell_flag_texture = SDL_CreateTextureFromSurface(m_renderer, cell_flag_surface);
+    m_cell_good_flag_texture = SDL_CreateTextureFromSurface(m_renderer, cell_good_flag_surface);
+    m_cell_bad_flag_texture = SDL_CreateTextureFromSurface(m_renderer, cell_bad_flag_surface);
     m_cell_bomb_texture = SDL_CreateTextureFromSurface(m_renderer, cell_bomb_surface);
+    m_cell_boom_texture = SDL_CreateTextureFromSurface(m_renderer, cell_boom_surface);
     SDL_FreeSurface(cell_0_surface);
     SDL_FreeSurface(cell_1_surface);
     SDL_FreeSurface(cell_2_surface);
@@ -44,7 +50,10 @@ Minesweeper::Minesweeper(SDL_Renderer* renderer) : m_renderer(renderer)
     SDL_FreeSurface(cell_8_surface);
     SDL_FreeSurface(cell_base_surface);
     SDL_FreeSurface(cell_flag_surface);
+    SDL_FreeSurface(cell_good_flag_surface);
+    SDL_FreeSurface(cell_bad_flag_surface);
     SDL_FreeSurface(cell_bomb_surface);
+    SDL_FreeSurface(cell_boom_surface);
     m_border_cell.proximity = -1;
     m_border_cell.is_bomb = false;
     m_border_cell.snooped = true;
@@ -69,7 +78,10 @@ Minesweeper::~Minesweeper()
     SDL_DestroyTexture(m_cell_8_texture);
     SDL_DestroyTexture(m_cell_base_texture);
     SDL_DestroyTexture(m_cell_flag_texture);
+    SDL_DestroyTexture(m_cell_good_flag_texture);
+    SDL_DestroyTexture(m_cell_bad_flag_texture);
     SDL_DestroyTexture(m_cell_bomb_texture);
+    SDL_DestroyTexture(m_cell_boom_texture);
 }
 
 
@@ -365,10 +377,10 @@ void Minesweeper::handleMouse(Sint32 x, Sint32 y, Uint8 button)
     {
         if(!cell.snooped)
         {
-            cell.texture = m_cell_flag_texture;
+            cell.is_flag = !cell.is_flag;
+            cell.texture = cell.is_flag ? m_cell_flag_texture : m_cell_base_texture;
         }
     }
-    
 }
 
 
@@ -385,7 +397,14 @@ void Minesweeper::handleSelection(Cell &cell)
     }
     m_moves++;
     printf("Cell ( %d, %d ): bomb: %s\n", cell.x, cell.y, cell.is_bomb ? "true" : "false");
-    search(cell);
+    if(cell.is_bomb)
+    {
+        gameOver(cell);
+    }
+    else
+    {
+        search(cell);
+    }
     printBoard();
 }
 
@@ -435,11 +454,6 @@ void Minesweeper::search(Cell &cell)
     {
         return;
     }
-    else if(cell.is_bomb)
-    {
-        cell.texture = m_cell_bomb_texture;
-        return;
-    }
     cell.snooped = true;
     applyTexture(cell);
     if(cell.proximity > 0)
@@ -464,51 +478,70 @@ void Minesweeper::search(Cell &cell)
  */
 void Minesweeper::applyTexture(Cell &cell)
 {
-    if(cell.is_bomb)
+    switch (cell.proximity)
     {
-        cell.texture = m_cell_bomb_texture;
+    case 0:
+        cell.texture = m_cell_0_texture;
+        break;
+    case 1:
+        cell.texture = m_cell_1_texture;
+        break;
+    case 2:
+        cell.texture = m_cell_2_texture;
+        break;
+    case 3:
+        cell.texture = m_cell_3_texture;
+        break;
+    case 4:
+        cell.texture = m_cell_4_texture;
+        break;
+    case 5:
+        cell.texture = m_cell_5_texture;
+        break;
+    case 6:
+        cell.texture = m_cell_6_texture;
+        break;
+    case 7:
+        cell.texture = m_cell_7_texture;
+        break;
+    case 8:
+        cell.texture = m_cell_8_texture;
+        break;
+    
+    default:
+        printf("\n\n%d\n\n", cell.proximity);
+        break;
     }
-    // else if(cell.is_flag)
-    // {
-        // cell.texture = m_cell_flag_texture;
-    // }
-    else
+}
+
+
+/**
+ * @brief Game Over
+ * 
+ * @param cell - losing cell
+ */
+void Minesweeper::gameOver(Cell &cell)
+{
+    for(auto &cell_row : m_cells)
     {
-        switch (cell.proximity)
+        for(auto &cell : cell_row)
         {
-        case 0:
-            cell.texture = m_cell_0_texture;
-            break;
-        case 1:
-            cell.texture = m_cell_1_texture;
-            break;
-        case 2:
-            cell.texture = m_cell_2_texture;
-            break;
-        case 3:
-            cell.texture = m_cell_3_texture;
-            break;
-        case 4:
-            cell.texture = m_cell_4_texture;
-            break;
-        case 5:
-            cell.texture = m_cell_5_texture;
-            break;
-        case 6:
-            cell.texture = m_cell_6_texture;
-            break;
-        case 7:
-            cell.texture = m_cell_7_texture;
-            break;
-        case 8:
-            cell.texture = m_cell_8_texture;
-            break;
-        
-        default:
-            printf("\n\n%d\n\n", cell.proximity);
-            break;
+            applyTexture(cell);
+            if(cell.is_bomb && cell.is_flag)
+            {
+                cell.texture = m_cell_good_flag_texture;
+            }
+            else if(!cell.is_bomb && cell.is_flag)
+            {
+                cell.texture = m_cell_bad_flag_texture;
+            }
+            else if(cell.is_bomb)
+            {
+                cell.texture = m_cell_bomb_texture;
+            }
         }
     }
+    cell.texture = m_cell_boom_texture;
 }
 
 

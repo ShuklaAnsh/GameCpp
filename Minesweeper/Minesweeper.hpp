@@ -57,6 +57,7 @@ class Minesweeper
         void addNeighbours(Cell& cell, Cell& left, Cell& top_left, Cell& top, Cell& top_right, Cell& right, Cell& bottom_right, Cell& bottom, Cell& bottom_left);
         void handleSelection(Cell &cell);
         void applyTexture(Cell &cell);
+        void gameOver(Cell &cell);
     // Modules
     private:
         SDL_Renderer* m_renderer;    /* Pointer to the renderer for the Game */
@@ -74,6 +75,9 @@ class Minesweeper
         SDL_Texture * m_cell_8_texture; /* Texture * for cell 8 */
         SDL_Texture * m_cell_base_texture;
         SDL_Texture * m_cell_flag_texture;
+        SDL_Texture * m_cell_good_flag_texture;
+        SDL_Texture * m_cell_bad_flag_texture;
+        SDL_Texture * m_cell_boom_texture;
         SDL_Texture * m_cell_bomb_texture;
         int m_moves;
         Cell m_border_cell;
