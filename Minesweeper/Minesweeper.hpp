@@ -50,6 +50,7 @@ class Minesweeper : public Game
         void renderPostHook() override;
         void handleKey(SDL_KeyboardEvent& key_event) override;
         void handleMouse(SDL_MouseButtonEvent& mouse_event) override;
+        void handleMouse(SDL_MouseMotionEvent& mouse_motion) override;
 
     private:
         void initTextures();

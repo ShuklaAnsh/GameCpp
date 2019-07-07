@@ -124,12 +124,18 @@ void Game::eventHandler()
             m_running = false;
             break;
         
+        case SDL_KEYUP:
         case SDL_KEYDOWN:
             handleKey(e.key);
             break;
 
+        case SDL_MOUSEBUTTONUP:
         case SDL_MOUSEBUTTONDOWN:
             handleMouse(e.button);
+            break;
+
+        case SDL_MOUSEMOTION:
+            handleMouse(e.motion);
             break;
 
         default:
@@ -155,6 +161,17 @@ void Game::handleKey(SDL_KeyboardEvent& key_event)
  * @param mouse_button 
  */
 void Game::handleMouse(SDL_MouseButtonEvent& mouse_button)
+{
+
+}
+
+
+/**
+ * @brief meant to be overriden
+ * 
+ * @param mouse_button 
+ */
+void Game::handleMouse(SDL_MouseMotionEvent& mouse_motion)
 {
 
 }

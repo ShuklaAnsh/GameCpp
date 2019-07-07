@@ -53,7 +53,7 @@ bool Minesweeper::initPostHook()
     m_border_cell.snooped = true;
     m_moves = 0;
 
-    int max_px = std::max(m_screen_width, m_screen_height);
+    int max_px = std::min(m_screen_width, m_screen_height - 50);
     int max_units = std::max(COLS, ROWS);
     m_cell_height = ceil(max_px / max_units);
     m_cell_width = m_cell_height;
@@ -80,6 +80,7 @@ bool Minesweeper::initPostHook()
  */
 void Minesweeper::initTextures()
 {
+
     SDL_Surface * cell_0_surface = IMG_Load("./Minesweeper/assets/cell0.png");
     SDL_Surface * cell_1_surface = IMG_Load("./Minesweeper/assets/cell1.png");
     SDL_Surface * cell_2_surface = IMG_Load("./Minesweeper/assets/cell2.png");
@@ -164,8 +165,8 @@ void Minesweeper::populateCell(Cell& cell, int x, int y)
 {
     cell.x = x;
     cell.y = y;
-    cell.rect.y = y * m_cell_height;
-    cell.rect.x = x * m_cell_width;
+    cell.rect.y = (y * m_cell_height);
+    cell.rect.x = (x * m_cell_width);
     cell.rect.w = m_cell_width;
     cell.rect.h = m_cell_height;
     cell.snooped = false;
@@ -401,20 +402,34 @@ void Minesweeper::handleKey(SDL_KeyboardEvent& key_event)
  */
 void Minesweeper::handleMouse(SDL_MouseButtonEvent& mouse_event)
 {
-    Uint8 button = mouse_event.button;
-    int row = mouse_event.x/m_cell_width;
-    int col = mouse_event.y/m_cell_height;
-    Cell &cell = m_cells.at(col).at(row);
-    if(button == SDL_BUTTON_LEFT)
+    if (mouse_event.type == SDL_MOUSEBUTTONUP)
     {
-        handleSelection(cell);
-    }
-    else
-    {
-        handleFlag(cell);
+        Uint8 button = mouse_event.button;
+        int row = mouse_event.x/m_cell_width;
+        int col = mouse_event.y/m_cell_height;
+        Cell &cell = m_cells.at(col).at(row);
+        if(button == SDL_BUTTON_LEFT)
+        {
+            handleSelection(cell);
+        }
+        else
+        {
+            handleFlag(cell);
+        }
     }
 }
 
+
+
+/**
+ * @brief Handles mouse Movement
+ * 
+ * @param mouse_event - SDL_MouseMotionEvent of mouse movement
+ */
+void Minesweeper::handleMouse(SDL_MouseMotionEvent& mouse_motion)
+{
+    printf("%d, %d\n", mouse_motion.x, mouse_motion.x); 
+}
 
 /**
  * @brief handle cell selection. starts bfs and increments move counter

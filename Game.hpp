@@ -28,6 +28,7 @@ class Game
         virtual bool initPostHook();
         virtual void handleKey(SDL_KeyboardEvent& key_event);
         virtual void handleMouse(SDL_MouseButtonEvent& mouse_button);
+        virtual void handleMouse(SDL_MouseMotionEvent& mouse_motion);
         virtual void renderPreHook();
         virtual void renderMidHook();
         virtual void renderPostHook();
