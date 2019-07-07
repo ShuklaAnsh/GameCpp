@@ -400,13 +400,13 @@ void Minesweeper::handleKey(SDL_KeyboardEvent& key_event)
  * 
  * @param mouse_event - SDL_MouseButtonEvent of mouse click received
  */
-void Minesweeper::handleMouse(SDL_MouseButtonEvent& mouse_event)
+void Minesweeper::handleMouse(SDL_MouseButtonEvent& mouse_button_event)
 {
-    if (mouse_event.type == SDL_MOUSEBUTTONUP)
+    if (mouse_button_event.type == SDL_MOUSEBUTTONUP)
     {
-        Uint8 button = mouse_event.button;
-        int row = mouse_event.x/m_cell_width;
-        int col = mouse_event.y/m_cell_height;
+        Uint8 button = mouse_button_event.button;
+        int row = mouse_button_event.x/m_cell_width;
+        int col = mouse_button_event.y/m_cell_height;
         Cell &cell = m_cells.at(col).at(row);
         if(button == SDL_BUTTON_LEFT)
         {
@@ -426,10 +426,22 @@ void Minesweeper::handleMouse(SDL_MouseButtonEvent& mouse_event)
  * 
  * @param mouse_event - SDL_MouseMotionEvent of mouse movement
  */
-void Minesweeper::handleMouse(SDL_MouseMotionEvent& mouse_motion)
+void Minesweeper::handleMouse(SDL_MouseMotionEvent& mouse_motion_event)
 {
-    printf("%d, %d\n", mouse_motion.x, mouse_motion.x); 
+    printf("%d, %d\n", mouse_motion_event.x, mouse_motion_event.x); 
 }
+
+
+/**
+ * @brief Handles window resize
+ * 
+ * @param window_event - SDL_WindowEvent recieved
+ */
+void Minesweeper::handleResize(SDL_WindowEvent& window_event)
+{
+
+}
+
 
 /**
  * @brief handle cell selection. starts bfs and increments move counter

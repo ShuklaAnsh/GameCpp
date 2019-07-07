@@ -51,7 +51,7 @@ bool Game::init(const char* title, int x, int y, int height, int width, bool ful
     printf( "Subsystems initialized.\n" );
     
     //Create Window
-    Uint32 flags = 0;
+    Uint32 flags = SDL_WINDOW_RESIZABLE;
     if( !(m_window = SDL_CreateWindow(title, x, y, width, height, flags)) )
     {
         printf( "Error: Unable to create SDL Window.\nSDL_Error: %s\n", SDL_GetError() );
@@ -137,6 +137,10 @@ void Game::eventHandler()
         case SDL_MOUSEMOTION:
             handleMouse(e.motion);
             break;
+        
+        case SDL_WINDOWEVENT:
+            handleResize(e.window);
+            break;
 
         default:
             break;
@@ -160,7 +164,7 @@ void Game::handleKey(SDL_KeyboardEvent& key_event)
  * 
  * @param mouse_button 
  */
-void Game::handleMouse(SDL_MouseButtonEvent& mouse_button)
+void Game::handleMouse(SDL_MouseButtonEvent& mouse_button_event)
 {
 
 }
@@ -169,9 +173,20 @@ void Game::handleMouse(SDL_MouseButtonEvent& mouse_button)
 /**
  * @brief meant to be overriden
  * 
- * @param mouse_button 
+ * @param mouse_motion_event - event recieved when mouse moved
  */
-void Game::handleMouse(SDL_MouseMotionEvent& mouse_motion)
+void Game::handleMouse(SDL_MouseMotionEvent& mouse_motion_event)
+{
+
+}
+
+
+/**
+ * @brief meant to be overriden
+ * 
+ * @param mouse_motion_event
+ */
+void Game::handleResize(SDL_WindowEvent& window_event)
 {
 
 }
