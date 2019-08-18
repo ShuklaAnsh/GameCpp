@@ -48,12 +48,18 @@ bool Minesweeper::initPostHook()
 {
     srand ( time(NULL) );
     initTextures();
+    
     m_border_cell.proximity = -1;
     m_border_cell.is_bomb = false;
     m_border_cell.snooped = true;
     m_moves = 0;
 
-    int max_px = std::min(m_screen_width, m_screen_height - 50);
+    // if ( ! initStatusBar() )
+    // {
+    //     return false;
+    // }
+
+    int max_px = std::min(m_screen_width, m_screen_height);
     int max_units = std::max(COLS, ROWS);
     m_cell_height = ceil(max_px / max_units);
     m_cell_width = m_cell_height;
@@ -406,7 +412,7 @@ void Minesweeper::handleMouse(SDL_MouseButtonEvent& mouse_button_event)
     {
         Uint8 button = mouse_button_event.button;
         int row = mouse_button_event.x/m_cell_width;
-        int col = mouse_button_event.y/m_cell_height;
+        int col = (mouse_button_event.y)/m_cell_height;
         Cell &cell = m_cells.at(col).at(row);
         if(button == SDL_BUTTON_LEFT)
         {
